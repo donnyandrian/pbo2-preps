@@ -5,6 +5,9 @@ import java.time.*;
 import java.time.format.*;
 import java.util.*;
 
+/**
+ * Represents a product with attributes such as invoice number, stock code, description, quantity, invoice date, unit price, customer ID, and country.
+ */
 class Product {
     private String invoiceNo;
     private String stockCode;
@@ -15,9 +18,23 @@ class Product {
     private int customerID;
     private String country;
 
+    /**
+     * Default constructor 
+     */
     public Product() {
     };
 
+    /**
+     * Parameterized constructor for Product class
+     * @param invoiceNo Invoice number
+     * @param stockCode Stock code
+     * @param description Product description
+     * @param quantity Quantity of product
+     * @param invoiceDate Date and time of invoice
+     * @param unitPrice Price per unit
+     * @param customerID Customer ID
+     * @param country Country of customer
+     */
     public Product(String invoiceNo, String stockCode, String description, int quantity, LocalDateTime invoiceDate,
             double unitPrice, int customerID, String country) {
         this.invoiceNo = invoiceNo;
@@ -30,6 +47,9 @@ class Product {
         this.country = country;
     }
 
+    /**
+     * Getters and Setters for product attributes.
+     */
     public String getInvoiceNo() {
         return invoiceNo;
     }
@@ -94,6 +114,10 @@ class Product {
         this.country = country;
     }
 
+    /**
+     * Overridden toString method to display product information in tabular format
+     * @return Formatted string representation of Product
+     */
     @Override
     public String toString() {
         return String.format("| %-7s | %-12s | %-36s | %-6s | %-16s | %-9s | %-10s | %-20s |",
@@ -103,7 +127,9 @@ class Product {
     }
 }
 
+// Controller class for managing product operations
 class ProductController {
+    
     /*
      * - `List<Product>` untuk menyimpan daftar produk ke dalam bentuk list
      * - `Set<String>` untuk mendapatkan daftar unik negara pelanggan
@@ -113,26 +139,50 @@ class ProductController {
      * - `Map<String, Product>` untuk mencari produk berdasarkan `StockCode`
      */
 
+    /**
+     * Loads product data from a CSV file.
+     * @param filename The name of the CSV file.
+     */
     private List<Product> products = new ArrayList<>();
     private Map<String, Integer> totalProductsSold = new HashMap<>();
     private Map<String, Double> totalRevenue = new HashMap<>();
+    private Set<String> uniqueCountries = new HashSet<>();
+    private Map<String, Product> productsMap = new HashMap<>();
 
+    /**
+     * Default constructor.
+     */
     public ProductController() {
     }
 
+    /**
+     * Loads product data from a CSV file.
+     * @param filename Name of the CSV file.
+     */
     public void LoadFromCSV(String filename) {
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(ClassPrep4.class.getResourceAsStream(filename)))) {
             String line;
             br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
-                products.add(ParseCSVLine(line));
+                Product product = (ParseCSVLine(line));
+                if(product != null){
+                uniqueCountries.add(product.getCountry());
+                productsMap.put(product.getStockCode(), product);
+                }
             }
         } catch (IOException e) {
             System.err.println("Error reading online_retail.csv");
         }
+
+        PrintProductsTable(products);
+        PrintUniqueCountries();
     }
 
+    /**
+     * Prints the list of products in a table format.
+     * @param list The list of products to be printed.
+     */
     public void PrintProductsTable(List<Product> list) {
         System.out.println(
                 "\n============================================================== PRODUCTS TABLE ===============================================================");
@@ -160,6 +210,32 @@ class ProductController {
         PrintProductsTable(products);
     }
 
+    /**
+     * Displays a list of unique customer countries.
+     */
+    public void PrintUniqueCountries() {
+        System.out.println("Daftar Negara Unik: ");
+        uniqueCountries.forEach(country -> System.out.println("- " + country));
+    }
+
+    /**
+     * Searches for a product based on StockCode.
+     * @param stockCode The stock code of the product.
+     * @return Product object if found, null otherwise.
+     */
+    public Product searchProduct(String stockCode) {
+        if (!productsMap.containsKey(stockCode)) {
+            System.out.println("Produk dengan StockCode '" + stockCode + "' tidak ditemukan!");
+            return null;
+        }
+        return productsMap.get(stockCode);
+    }
+
+    /**
+     * Parses a single CSV line into a Product object.
+     * @param line The CSV line.
+     * @return A Product object.
+     */
     private Product ParseCSVLine(String line) {
         String[] result = new String[8]; // Fixed 8 columns
         StringBuilder sb = new StringBuilder(line.length()); // Preallocate buffer
@@ -191,6 +267,9 @@ class ProductController {
                 result[7]);
     }
 
+    /**
+     * Calculates the total number of products sold based on StockCode.
+     */
     public void CountTotalProductsSold() {
         for (Product product : products) {
             totalProductsSold.put(product.getStockCode(),
@@ -198,6 +277,9 @@ class ProductController {
         }
     }
 
+    /**
+     * Calculates the total revenue per country.
+     */
     public void CountTotalRevenue() {
         for (Product product : products) {
             Double a = product.getQuantity() * product.getUnitPrice();
@@ -205,6 +287,9 @@ class ProductController {
         }
     }
 
+    /**
+     * Generates a business report including total products sold and total revenue.
+     */
     public void GenerateBusinessReport() {
         CountTotalProductsSold();
         CountTotalRevenue();
@@ -213,12 +298,12 @@ class ProductController {
         System.out.println("+------------------+----------------------+");
         System.out.println(String.format("| %-16s | %-20s |", "StockCode", "Total Products Sold"));
         System.out.println("+------------------+----------------------+");
-        /*
+       
+        /**
          * totalProductsSold.forEach(
          * (StockCode, total) -> System.out.println(String.format("| %-16s | %-20d |",
          * StockCode, total)));
          */
-
         int current = 0;
         for (Map.Entry<String, Integer> entry : totalProductsSold.entrySet()) {
             System.out.println(String.format("| %-16s | %-20d |", entry.getKey(), entry.getValue()));
@@ -237,11 +322,11 @@ class ProductController {
     }
 }
 
+// Main class
 public class ClassPrep4 {
     public static void _main(String[] args) {
         ProductController controller = new ProductController();
         controller.LoadFromCSV("/online_retail.csv");
-
         try (Scanner sc = new Scanner(System.in)) {
             Boolean first = true;
             do {
@@ -277,5 +362,13 @@ public class ClassPrep4 {
                 }
             } while (true);
         }
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\nMasukkan StockCode untuk mencari produk: ");
+        String stockCode = scanner.nextLine();
+        Product result = controller.searchProduct(stockCode);
+
+        if (result != null) System.out.println("\nProduk ditemukan:\n" + result);
+        scanner.close();
     }
 }
