@@ -1,14 +1,9 @@
 package com.pbo2.preps;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
 
 class Product {
     private String invoiceNo;
@@ -120,7 +115,7 @@ class ProductController {
 
     private List<Product> products = new ArrayList<>();
     private Map<String, Integer> totalProductsSold = new HashMap<>();
-    private Map<String, Double> totalFinancial = new HashMap<>();
+    private Map<String, Double> totalRevenue = new HashMap<>();
 
     public ProductController() {
     }
@@ -189,26 +184,32 @@ class ProductController {
         }
     }
 
-    public void CountTotalFinancial() {
+    public void CountTotalRevenue() {
         for (Product product : products) {
             Double a = product.getQuantity() * product.getUnitPrice();
-            totalFinancial.put(product.getCountry(), totalFinancial.getOrDefault(product.getCountry(), 0.0) + a);
+            totalRevenue.put(product.getCountry(), totalRevenue.getOrDefault(product.getCountry(), 0.0) + a);
         }
     }
 
     public void GenerateBusinessReport() {
         CountTotalProductsSold();
-        CountTotalFinancial();
+        CountTotalRevenue();
 
-        System.out.println("\n===== Laporan Analisis Bisnis =====");
+        System.out.println("\n===== Business Analysis Report =====\n");
 
-        System.out.println("\nTotal Produk Terjual per StockCode:");
+        System.out.println("+------------+----------------------+");
+        System.out.println(String.format("| %-10s | %-20s |", "StockCode", "Total Products Sold"));
+        System.out.println("+------------+----------------------+");
         totalProductsSold.forEach((StockCode, total) -> 
-            System.out.println("StockCode : " + StockCode + " | Total Produk Terjual : " + total));
+            System.out.println(String.format("| %-10s | %-20d |", StockCode, total)));
+        System.out.println("+------------+----------------------+\n");
 
-        System.out.println("\nTotal Pendapatan per Negara:");
-        totalFinancial.forEach((Country, a) ->
-            System.out.println("Negara : " + Country + " | Total Pendapatan : " + a));
+        System.out.println("+-----------------------+----------------------+");
+        System.out.println(String.format("| %-21s | %-20s |", "Country", "Total Revenue"));
+        System.out.println("+-----------------------+----------------------+");
+        totalRevenue.forEach((Country, a) ->
+            System.out.println(String.format("| %-21s | %-20.2f |", Country, a)));
+        System.out.println("+-----------------------+----------------------+\n");
     }
 }
 
