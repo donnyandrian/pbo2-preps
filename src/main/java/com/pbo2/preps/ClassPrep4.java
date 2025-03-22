@@ -1,9 +1,14 @@
 package com.pbo2.preps;
 
-import java.io.*;
-import java.time.*;
-import java.time.format.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Product {
     private String invoiceNo;
@@ -197,13 +202,15 @@ class ProductController {
 
         System.out.println("\n===== Business Analysis Report =====\n");
 
-        System.out.println("+------------+----------------------+");
-        System.out.println(String.format("| %-10s | %-20s |", "StockCode", "Total Products Sold"));
-        System.out.println("+------------+----------------------+");
+        System.out.println("Total Products Sold By StockCode");
+        System.out.println("+------------------+----------------------+");
+        System.out.println(String.format("| %-16s | %-20s |", "StockCode", "Total Products Sold"));
+        System.out.println("+------------------+----------------------+");
         totalProductsSold.forEach((StockCode, total) -> 
-            System.out.println(String.format("| %-10s | %-20d |", StockCode, total)));
-        System.out.println("+------------+----------------------+\n");
+            System.out.println(String.format("| %-16s | %-20d |", StockCode, total)));
+        System.out.println("+------------------+----------------------+\n");
 
+        System.out.println("Total Revenue By Country");
         System.out.println("+-----------------------+----------------------+");
         System.out.println(String.format("| %-21s | %-20s |", "Country", "Total Revenue"));
         System.out.println("+-----------------------+----------------------+");
