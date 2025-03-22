@@ -1,17 +1,10 @@
 package com.pbo2.preps;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.io.*;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
+
 
 class Product {
     private String invoiceNo;
@@ -136,6 +129,7 @@ class ProductController {
             while ((line = br.readLine()) != null) {
                 Product product = (ParseCSVLine(line));
                 if(product != null){
+                products.add(product);
                 uniqueCountries.add(product.getCountry());
                 productsMap.put(product.getStockCode(), product);
                 }
@@ -160,13 +154,13 @@ class ProductController {
         }
     }
     public void PrintUniqueCountries() {
-        System.out.println("Daftar Negara Unik: ");
+        System.out.println("Unique Countries: ");
         uniqueCountries.forEach(country -> System.out.println("- " + country));
     }
 
     public Product searchProduct(String stockCode) {
         if (!productsMap.containsKey(stockCode)) {
-            System.out.println("Produk dengan StockCode '" + stockCode + "' tidak ditemukan!");
+            System.out.println("Produk with StockCode '" + stockCode + "' not found!");
             return null;
         }
         return productsMap.get(stockCode);
@@ -209,11 +203,11 @@ public class ClassPrep4 {
         controller.LoadFromCSV("/online_retail.csv");
 
         Scanner scanner = new Scanner(System.in);
-        System.out.print("\nMasukkan StockCode untuk mencari produk: ");
+        System.out.print("Enter StockCode to search for a product: ");
         String stockCode = scanner.nextLine();
         Product result = controller.searchProduct(stockCode);
 
-        if (result != null) System.out.println("\nProduk ditemukan:\n" + result);
+        if (result != null) System.out.println("\nProduct found:\n" + result);
         scanner.close();
     }
 }
