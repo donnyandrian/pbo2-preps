@@ -202,7 +202,7 @@ class ProductController {
 
         System.out.println("\n===== Business Analysis Report =====\n");
 
-        System.out.println("Total Products Sold By StockCode");
+        System.out.println("Total Products Sold Table By StockCode");
         System.out.println("+------------------+----------------------+");
         System.out.println(String.format("| %-16s | %-20s |", "StockCode", "Total Products Sold"));
         System.out.println("+------------------+----------------------+");
@@ -210,7 +210,7 @@ class ProductController {
             System.out.println(String.format("| %-16s | %-20d |", StockCode, total)));
         System.out.println("+------------------+----------------------+\n");
 
-        System.out.println("Total Revenue By Country");
+        System.out.println("Total Revenue Table By Country");
         System.out.println("+-----------------------+----------------------+");
         System.out.println(String.format("| %-21s | %-20s |", "Country", "Total Revenue"));
         System.out.println("+-----------------------+----------------------+");
