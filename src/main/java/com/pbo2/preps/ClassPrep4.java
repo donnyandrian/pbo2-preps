@@ -167,6 +167,7 @@ class ProductController {
             while ((line = br.readLine()) != null) {
                 Product product = (ParseCSVLine(line));
                 if(product != null){
+                products.add(product);
                 uniqueCountries.add(product.getCountry());
                 productsMap.put(product.getStockCode(), product);
                 }
@@ -214,7 +215,7 @@ class ProductController {
      * Displays a list of unique customer countries.
      */
     public void PrintUniqueCountries() {
-        System.out.println("Daftar Negara Unik: ");
+        System.out.println("Unique Countries: ");
         uniqueCountries.forEach(country -> System.out.println("- " + country));
     }
 
@@ -225,7 +226,7 @@ class ProductController {
      */
     public Product searchProduct(String stockCode) {
         if (!productsMap.containsKey(stockCode)) {
-            System.out.println("Produk dengan StockCode '" + stockCode + "' tidak ditemukan!");
+            System.out.println("Produk with StockCode '" + stockCode + "' not found!");
             return null;
         }
         return productsMap.get(stockCode);
@@ -364,11 +365,11 @@ public class ClassPrep4 {
         }
 
         Scanner scanner = new Scanner(System.in);
-        System.out.print("\nMasukkan StockCode untuk mencari produk: ");
+        System.out.print("Enter StockCode to search for a product: ");
         String stockCode = scanner.nextLine();
         Product result = controller.searchProduct(stockCode);
 
-        if (result != null) System.out.println("\nProduk ditemukan:\n" + result);
+        if (result != null) System.out.println("\nProduct found:\n" + result);
         scanner.close();
     }
 }
