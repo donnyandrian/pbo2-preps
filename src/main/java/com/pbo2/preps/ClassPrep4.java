@@ -96,7 +96,7 @@ class Product {
 
     @Override
     public String toString() {
-        return String.format("| %-7s | %-9s | %-36s | %-6s | %-16s | %-9s | %-10s | %-20s |",
+        return String.format("| %-7s | %-12s | %-36s | %-6s | %-16s | %-9s | %-10s | %-20s |",
                 invoiceNo, stockCode, description, quantity,
                 invoiceDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
                 unitPrice, customerID, country);
@@ -131,20 +131,33 @@ class ProductController {
         } catch (IOException e) {
             System.err.println("Error reading online_retail.csv");
         }
-
-        PrintProductsTable(products);
     }
 
     public void PrintProductsTable(List<Product> list) {
         System.out.println(
-                String.format("| %-7s | %-9s | %-36s | %-6s | %-16s | %-9s | %-10s | %-20s |",
+                "\n============================================================== PRODUCTS TABLE ===============================================================");
+        System.out.println(
+                "+---------+--------------+--------------------------------------+--------+------------------+-----------+------------+----------------------+");
+        System.out.println(
+                String.format("| %-7s | %-12s | %-36s | %-6s | %-16s | %-9s | %-10s | %-20s |",
                         "InvcNo", "StockCode", "Description", "Qty", "InvoiceDate", "UnitPrice", "CustomerID",
                         "Country"));
         System.out.println(
-                "------------------------------------------------------------------------------------------------------------------------------------------");
+                "+---------+--------------+--------------------------------------+--------+------------------+-----------+------------+----------------------+");
+        int current = 0;
         for (Product product : list) {
             System.out.println(product.toString());
+            if (++current == 10) {
+                break;
+            }
         }
+
+        System.out.println(
+                "+---------+--------------+--------------------------------------+--------+------------------+-----------+------------+----------------------+");
+    }
+
+    public void PrintProductsTable() {
+        PrintProductsTable(products);
     }
 
     private Product ParseCSVLine(String line) {
@@ -180,7 +193,8 @@ class ProductController {
 
     public void CountTotalProductsSold() {
         for (Product product : products) {
-            totalProductsSold.put(product.getStockCode(), totalProductsSold.getOrDefault(product.getStockCode(), 0) + product.getQuantity());
+            totalProductsSold.put(product.getStockCode(),
+                    totalProductsSold.getOrDefault(product.getStockCode(), 0) + product.getQuantity());
         }
     }
 
@@ -195,23 +209,31 @@ class ProductController {
         CountTotalProductsSold();
         CountTotalRevenue();
 
-        System.out.println("\n===== Business Analysis Report =====\n");
-
-        System.out.println("Total Products Sold Table By StockCode");
+        System.out.println("\n======== TOTAL PRODUCTS SOLD TABLE ========");
         System.out.println("+------------------+----------------------+");
         System.out.println(String.format("| %-16s | %-20s |", "StockCode", "Total Products Sold"));
         System.out.println("+------------------+----------------------+");
-        totalProductsSold.forEach((StockCode, total) -> 
-            System.out.println(String.format("| %-16s | %-20d |", StockCode, total)));
-        System.out.println("+------------------+----------------------+\n");
+        /*
+         * totalProductsSold.forEach(
+         * (StockCode, total) -> System.out.println(String.format("| %-16s | %-20d |",
+         * StockCode, total)));
+         */
 
-        System.out.println("Total Revenue Table By Country");
-        System.out.println("+-----------------------+----------------------+");
-        System.out.println(String.format("| %-21s | %-20s |", "Country", "Total Revenue"));
-        System.out.println("+-----------------------+----------------------+");
-        totalRevenue.forEach((Country, a) ->
-            System.out.println(String.format("| %-21s | %-20.2f |", Country, a)));
-        System.out.println("+-----------------------+----------------------+\n");
+        int current = 0;
+        for (Map.Entry<String, Integer> entry : totalProductsSold.entrySet()) {
+            System.out.println(String.format("| %-16s | %-20d |", entry.getKey(), entry.getValue()));
+            if (++current == 10) {
+                break;
+            }
+        }
+        System.out.println("+------------------+----------------------+");
+
+        System.out.println("\n============= TOTAL REVENUE TABLE =============");
+        System.out.println("+-----------------------+---------------------+");
+        System.out.println(String.format("| %-21s | %-19s |", "Country", "Total Revenue"));
+        System.out.println("+-----------------------+---------------------+");
+        totalRevenue.forEach((Country, a) -> System.out.println(String.format("| %-21s | %-19.2f |", Country, a)));
+        System.out.println("+-----------------------+---------------------+");
     }
 }
 
@@ -219,6 +241,41 @@ public class ClassPrep4 {
     public static void _main(String[] args) {
         ProductController controller = new ProductController();
         controller.LoadFromCSV("/online_retail.csv");
-        controller.GenerateBusinessReport();
+
+        try (Scanner sc = new Scanner(System.in)) {
+            Boolean first = true;
+            do {
+                if (!first)
+                    System.out.println("\n\n=============================================================================================================================================\n\n");
+
+                first = false;
+                
+                System.out.println("+----------------------------------------------+");
+                System.out.println("|      Welcome To Sales Management System      |");
+                System.out.println("+----------------------------------------------+");
+                System.out.println("|            Please choose an option           |");
+                System.out.println("|                                              |");
+                System.out.println("| 1. Print Products Table                      |");
+                System.out.println("| 2. Generate Business Report                  |");
+                System.out.println("| 3. Exit                                      |");
+                System.out.println("|                                              |");
+                System.out.println("+----------------------------------------------+");
+                System.out.print("Enter your choice: ");
+
+                String input = sc.next();
+                int choice = Integer.parseInt(input);
+
+                if (choice == 1) {
+                    controller.PrintProductsTable();
+                } else if (choice == 2) {
+                    controller.GenerateBusinessReport();
+                } else if (choice == 3) {
+                    System.out.println("Goodbye!");
+                    break;
+                } else {
+                    System.out.println("Invalid choice. Please try again.");
+                }
+            } while (true);
+        }
     }
 }
