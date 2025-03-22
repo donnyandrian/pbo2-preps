@@ -116,7 +116,6 @@ class ProductController {
      */
 
     private List<Product> products = new ArrayList<>();
-
     private Set<String> uniqueCountries = new HashSet<>();
     private Map<String, Product> productsMap = new HashMap<>();
     private Map<String, Integer> totalProductsSold = new HashMap<>();
@@ -124,14 +123,17 @@ class ProductController {
 
     public ProductController() {
     }
+    /**
+     * Loads product data from a CSV file.
+     */
 
-    public void LoadFromCSV(String filename) {
+    public void LoadFromCsv(String filename) {
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(ClassPrep4.class.getResourceAsStream(filename)))) {
             String line;
             br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
-                Product product = (ParseCSVLine(line));
+                Product product = (ParseCsvLine(line));
                 if(product != null){
                 products.add(product);
                 uniqueCountries.add(product.getCountry());
@@ -139,13 +141,15 @@ class ProductController {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error reading online_retail.csv");
+            System.err.println("Error reading online retail.csv");
         }
 
         PrintProductsTable(products);
         PrintUniqueCountries();
     }
-
+     /**
+     * Prints the list of products in a table format.
+     */
     public void PrintProductsTable(List<Product> list) {
         System.out.println(
                 String.format("| %-7s | %-9s | %-36s | %-6s | %-16s | %-9s | %-10s | %-20s |",
@@ -157,10 +161,21 @@ class ProductController {
             System.out.println(product.toString());
         }
     }
+
+    /**
+     * Prints the unique list of countries from the product data.
+     */
+
     public void PrintUniqueCountries() {
         System.out.println("Unique Countries: ");
         uniqueCountries.forEach(country -> System.out.println("- " + country));
     }
+
+    /**
+     * Searches for a product by StockCode.
+     * @param stockCode The StockCode to search for.
+     * @return The found product or null if not found.
+     */
 
     public Product searchProduct(String stockCode) {
         if (!productsMap.containsKey(stockCode)) {
@@ -169,7 +184,12 @@ class ProductController {
         }
         return productsMap.get(stockCode);
     }
-    private Product ParseCSVLine(String line) {
+    /**
+     * Parses a single CSV line into a Product object.
+     * @param line The CSV line.
+     * @return A Product object.
+     */
+    private Product ParseCsvLine(String line) {
         String[] result = new String[8]; // Fixed 8 columns
         StringBuilder sb = new StringBuilder(line.length()); // Preallocate buffer
         boolean inQuotes = false;
@@ -200,11 +220,19 @@ class ProductController {
                 result[7]);
     }
 
+    /**
+     * Calculates the total products sold by StockCode.
+     */
+
     public void CountTotalProductsSold() {
         for (Product product : products) {
             totalProductsSold.put(product.getStockCode(), totalProductsSold.getOrDefault(product.getStockCode(), 0) + product.getQuantity());
         }
     }
+
+    /**
+     * Calculates the total revenue by country.
+     */
 
     public void CountTotalRevenue() {
         for (Product product : products) {
@@ -212,6 +240,10 @@ class ProductController {
             totalRevenue.put(product.getCountry(), totalRevenue.getOrDefault(product.getCountry(), 0.0) + a);
         }
     }
+
+    /**
+     * Generates a business report including total products sold and total revenue.
+     */
 
     public void GenerateBusinessReport() {
         CountTotalProductsSold();
@@ -240,8 +272,7 @@ class ProductController {
 public class ClassPrep4 {
     public static void _main(String[] args) {
         ProductController controller = new ProductController();
-        controller.LoadFromCSV("/online_retail.csv");
-
+        controller.LoadFromCsv("/online_retail.csv");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter StockCode to search for a product: ");
         String stockCode = scanner.nextLine();
