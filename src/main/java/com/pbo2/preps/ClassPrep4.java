@@ -123,8 +123,12 @@ class ProductController {
      */
 
     private List<Product> products = new ArrayList<>();
+
     private Set<String> uniqueCountries = new HashSet<>();
     private Map<String, Product> productsMap = new HashMap<>();
+    private Map<String, Integer> totalProductsSold = new HashMap<>();
+    private Map<String, Double> totalRevenue = new HashMap<>();
+
     public ProductController() {
     }
 
@@ -201,6 +205,42 @@ class ProductController {
                 result[6].isEmpty() ? 0 : (int) Double.parseDouble(result[6]),
                 result[7]);
     }
+
+    public void CountTotalProductsSold() {
+        for (Product product : products) {
+            totalProductsSold.put(product.getStockCode(), totalProductsSold.getOrDefault(product.getStockCode(), 0) + product.getQuantity());
+        }
+    }
+
+    public void CountTotalRevenue() {
+        for (Product product : products) {
+            Double a = product.getQuantity() * product.getUnitPrice();
+            totalRevenue.put(product.getCountry(), totalRevenue.getOrDefault(product.getCountry(), 0.0) + a);
+        }
+    }
+
+    public void GenerateBusinessReport() {
+        CountTotalProductsSold();
+        CountTotalRevenue();
+
+        System.out.println("\n===== Business Analysis Report =====\n");
+
+        System.out.println("Total Products Sold Table By StockCode");
+        System.out.println("+------------------+----------------------+");
+        System.out.println(String.format("| %-16s | %-20s |", "StockCode", "Total Products Sold"));
+        System.out.println("+------------------+----------------------+");
+        totalProductsSold.forEach((StockCode, total) -> 
+            System.out.println(String.format("| %-16s | %-20d |", StockCode, total)));
+        System.out.println("+------------------+----------------------+\n");
+
+        System.out.println("Total Revenue Table By Country");
+        System.out.println("+-----------------------+----------------------+");
+        System.out.println(String.format("| %-21s | %-20s |", "Country", "Total Revenue"));
+        System.out.println("+-----------------------+----------------------+");
+        totalRevenue.forEach((Country, a) ->
+            System.out.println(String.format("| %-21s | %-20.2f |", Country, a)));
+        System.out.println("+-----------------------+----------------------+\n");
+    }
 }
 
 public class ClassPrep4 {
@@ -215,5 +255,7 @@ public class ClassPrep4 {
 
         if (result != null) System.out.println("\nProduk ditemukan:\n" + result);
         scanner.close();
+
+        controller.GenerateBusinessReport();
     }
 }
