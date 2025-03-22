@@ -5,6 +5,7 @@ import java.time.*;
 import java.time.format.*;
 import java.util.*;
 
+
 class Product {
     private String invoiceNo;
     private String stockCode;
@@ -104,6 +105,7 @@ class Product {
 }
 
 class ProductController {
+    
     /*
      * - `List<Product>` untuk menyimpan daftar produk ke dalam bentuk list
      * - `Set<String>` untuk mendapatkan daftar unik negara pelanggan
@@ -114,6 +116,9 @@ class ProductController {
      */
 
     private List<Product> products = new ArrayList<>();
+
+    private Set<String> uniqueCountries = new HashSet<>();
+    private Map<String, Product> productsMap = new HashMap<>();
     private Map<String, Integer> totalProductsSold = new HashMap<>();
     private Map<String, Double> totalRevenue = new HashMap<>();
 
@@ -126,13 +131,19 @@ class ProductController {
             String line;
             br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
-                products.add(ParseCSVLine(line));
+                Product product = (ParseCSVLine(line));
+                if(product != null){
+                products.add(product);
+                uniqueCountries.add(product.getCountry());
+                productsMap.put(product.getStockCode(), product);
+                }
             }
         } catch (IOException e) {
             System.err.println("Error reading online_retail.csv");
         }
 
         PrintProductsTable(products);
+        PrintUniqueCountries();
     }
 
     public void PrintProductsTable(List<Product> list) {
@@ -146,7 +157,18 @@ class ProductController {
             System.out.println(product.toString());
         }
     }
+    public void PrintUniqueCountries() {
+        System.out.println("Unique Countries: ");
+        uniqueCountries.forEach(country -> System.out.println("- " + country));
+    }
 
+    public Product searchProduct(String stockCode) {
+        if (!productsMap.containsKey(stockCode)) {
+            System.out.println("Produk with StockCode '" + stockCode + "' not found!");
+            return null;
+        }
+        return productsMap.get(stockCode);
+    }
     private Product ParseCSVLine(String line) {
         String[] result = new String[8]; // Fixed 8 columns
         StringBuilder sb = new StringBuilder(line.length()); // Preallocate buffer
@@ -219,6 +241,15 @@ public class ClassPrep4 {
     public static void _main(String[] args) {
         ProductController controller = new ProductController();
         controller.LoadFromCSV("/online_retail.csv");
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter StockCode to search for a product: ");
+        String stockCode = scanner.nextLine();
+        Product result = controller.searchProduct(stockCode);
+
+        if (result != null) System.out.println("\nProduct found:\n" + result);
+        scanner.close();
+
         controller.GenerateBusinessReport();
     }
 }
