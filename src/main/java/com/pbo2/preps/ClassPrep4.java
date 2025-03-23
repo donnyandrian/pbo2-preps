@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
-
+// Class representing a Product entity
 class Product {
     private String invoiceNo;
     private String stockCode;
@@ -23,10 +23,22 @@ class Product {
     private double unitPrice;
     private int customerID;
     private String country;
-
+    /**
+     * Default constructor for Product class
+     */
     public Product() {
     };
-
+    /**
+     * Parameterized constructor for Product class
+     * @param invoiceNo Invoice number
+     * @param stockCode Stock code
+     * @param description Product description
+     * @param quantity Quantity of product
+     * @param invoiceDate Date and time of invoice
+     * @param unitPrice Price per unit
+     * @param customerID Customer ID
+     * @param country Country of customer
+     */
     public Product(String invoiceNo, String stockCode, String description, int quantity, LocalDateTime invoiceDate,
             double unitPrice, int customerID, String country) {
         this.invoiceNo = invoiceNo;
@@ -38,7 +50,7 @@ class Product {
         this.customerID = customerID;
         this.country = country;
     }
-
+    // Getters and Setters
     public String getInvoiceNo() {
         return invoiceNo;
     }
@@ -102,7 +114,10 @@ class Product {
     public void setCountry(String country) {
         this.country = country;
     }
-
+    /**
+     * Overridden toString method to display product information in tabular format
+     * @return Formatted string representation of Product
+     */
     @Override
     public String toString() {
         return String.format("| %-7s | %-9s | %-36s | %-6s | %-16s | %-9s | %-10s | %-20s |",
@@ -111,7 +126,7 @@ class Product {
                 unitPrice, customerID, country);
     }
 }
-
+// Controller class for managing product operations
 class ProductController {
     
     /*
@@ -122,12 +137,16 @@ class ProductController {
      * - `Map<String, Double>` untuk menghitung total pendapatan per negara
      * - `Map<String, Product>` untuk mencari produk berdasarkan `StockCode`
      */
-
-    private List<Product> products = new ArrayList<>();
-    private Set<String> uniqueCountries = new HashSet<>();
-    private Map<String, Product> productsMap = new HashMap<>();
-    private Map<String, Integer> totalProductsSold = new HashMap<>();
-    private Map<String, Double> totalRevenue = new HashMap<>();
+    
+    /**
+     * Loads product data from a CSV file.
+     * @param filename The name of the CSV file.
+     */
+    private List<Product> products = new ArrayList<>(); 
+    private Set<String> uniqueCountries = new HashSet<>(); 
+    private Map<String, Product> productsMap = new HashMap<>(); 
+    private Map<String, Integer> totalProductsSold = new HashMap<>(); 
+    private Map<String, Double> totalRevenue = new HashMap<>(); 
 
     public ProductController() {
     }
@@ -155,8 +174,9 @@ class ProductController {
         PrintProductsTable(products);
         PrintUniqueCountries();
     }
-     /**
+    /**
      * Prints the list of products in a table format.
+     * @param list The list of products to be printed.
      */
     public void PrintProductsTable(List<Product> list) {
         System.out.println(
@@ -276,6 +296,8 @@ class ProductController {
         System.out.println("+-----------------------+----------------------+\n");
     }
 }
+
+// Main class
 
 public class ClassPrep4 {
     public static void _main(String[] args) {
