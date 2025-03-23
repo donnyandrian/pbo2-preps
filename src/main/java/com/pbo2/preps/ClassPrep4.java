@@ -1,10 +1,18 @@
 package com.pbo2.preps;
 
 
-import java.io.*;
-import java.time.*;
-import java.time.format.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 
 /**
  * Represents a product with attributes such as invoice number, stock code, description, quantity, invoice date, unit price, customer ID, and country.
@@ -207,7 +215,10 @@ class ProductController {
         System.out.println(
                 "+---------+--------------+--------------------------------------+--------+------------------+-----------+------------+----------------------+");
     }
-
+    /**
+     * Method to print the products table using the available product list.
+     * Calls the PrintProductsTable method with the list of products as a parameter.
+     */
     public void PrintProductsTable() {
         PrintProductsTable(products);
     }
@@ -300,21 +311,7 @@ class ProductController {
         System.out.println("+------------------+----------------------+");
         System.out.println(String.format("| %-16s | %-20s |", "StockCode", "Total Products Sold"));
         System.out.println("+------------------+----------------------+");
-       
-        /**
-         * totalProductsSold.forEach(
-         * (StockCode, total) -> System.out.println(String.format("| %-16s | %-20d |",
-         * StockCode, total)));
-         */
-        int current = 0;
-        for (Map.Entry<String, Integer> entry : totalProductsSold.entrySet()) {
-            System.out.println(String.format("| %-16s | %-20d |", entry.getKey(), entry.getValue()));
-            if (++current == 10) {
-                break;
-            }
-        }
         System.out.println("+------------------+----------------------+");
-
         System.out.println("\n============= TOTAL REVENUE TABLE =============");
         System.out.println("+-----------------------+---------------------+");
         System.out.println(String.format("| %-21s | %-19s |", "Country", "Total Revenue"));
@@ -362,15 +359,14 @@ public class ClassPrep4 {
                 } else {
                     System.out.println("Invalid choice. Please try again.");
                 }
-            } while (true);
-        }
+        } while (true);
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter StockCode to search for a product: ");
-        String stockCode = scanner.nextLine();
+        String stockCode = sc.nextLine();
         Product result = controller.searchProduct(stockCode);
 
         if (result != null) System.out.println("\nProduct found:\n" + result);
-        scanner.close();
+
+    }
     }
 }
