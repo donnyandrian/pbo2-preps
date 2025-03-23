@@ -1,9 +1,17 @@
 package com.pbo2.preps;
 
-import java.io.*;
-import java.time.*;
-import java.time.format.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 
 
 class Product {
@@ -127,13 +135,13 @@ class ProductController {
      * Loads product data from a CSV file.
      */
 
-    public void LoadFromCsv(String filename) {
+    public void LoadFromCSV(String filename) {
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(ClassPrep4.class.getResourceAsStream(filename)))) {
             String line;
             br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
-                Product product = (ParseCsvLine(line));
+                Product product = (ParseCSVLine(line));
                 if(product != null){
                 products.add(product);
                 uniqueCountries.add(product.getCountry());
@@ -141,7 +149,7 @@ class ProductController {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error reading online retail.csv");
+            System.err.println("Error reading online_retail.csv");
         }
 
         PrintProductsTable(products);
@@ -177,7 +185,7 @@ class ProductController {
      * @return The found product or null if not found.
      */
 
-    public Product searchProduct(String stockCode) {
+    public Product SearchProduct(String stockCode) {
         if (!productsMap.containsKey(stockCode)) {
             System.out.println("Produk with StockCode '" + stockCode + "' not found!");
             return null;
@@ -189,7 +197,7 @@ class ProductController {
      * @param line The CSV line.
      * @return A Product object.
      */
-    private Product ParseCsvLine(String line) {
+    private Product ParseCSVLine(String line) {
         String[] result = new String[8]; // Fixed 8 columns
         StringBuilder sb = new StringBuilder(line.length()); // Preallocate buffer
         boolean inQuotes = false;
@@ -272,11 +280,11 @@ class ProductController {
 public class ClassPrep4 {
     public static void _main(String[] args) {
         ProductController controller = new ProductController();
-        controller.LoadFromCsv("/online_retail.csv");
+        controller.LoadFromCSV("/online_retail.csv");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter StockCode to search for a product: ");
         String stockCode = scanner.nextLine();
-        Product result = controller.searchProduct(stockCode);
+        Product result = controller.SearchProduct(stockCode);
 
         if (result != null) System.out.println("\nProduct found:\n" + result);
         scanner.close();
