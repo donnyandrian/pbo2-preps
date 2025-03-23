@@ -1,18 +1,10 @@
 package com.pbo2.preps;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.io.*;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
 
 /**
  * Represents a product with attributes such as invoice number, stock code, description, quantity, invoice date, unit price, customer ID, and country.
