@@ -1,10 +1,20 @@
 package com.pbo2.preps;
 
-import java.io.*;
-import java.text.*;
-import java.time.*;
-import java.time.format.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 
 /**
  * Represents a product with attributes such as invoice number, stock code,
@@ -55,77 +65,160 @@ class Product {
         this.country = new ArrayList<>(other.country);
     }
 
+    
+   // Getter methods to retrieve the values of product attributes
+
     /**
-     * Getters and Setters for product attributes.
+     * Retrieves the list of invoice numbers.
+     * 
+     * @return List of invoice numbers.
      */
     public List<String> getInvoiceNo() {
         return invoiceNo;
     }
 
+    /**
+     * Retrieves the stock code of the product.
+     * 
+     * @return Stock code of the product.
+     */
     public String getStockCode() {
         return stockCode;
     }
 
+    /**
+     * Retrieves the product description.
+     * 
+     * @return Description of the product.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Retrieves the list of quantities for each transaction.
+     * 
+     * @return List of product quantities.
+     */
     public List<Integer> getQuantity() {
         return quantity;
     }
 
+    /**
+     * Retrieves the list of invoice dates.
+     * 
+     * @return List of invoice dates.
+     */
     public List<LocalDateTime> getInvoiceDate() {
         return invoiceDate;
     }
 
+    /**
+     * Retrieves the list of unit prices for each transaction.
+     * 
+     * @return List of unit prices.
+     */
     public List<Double> getUnitPrice() {
         return unitPrice;
     }
 
+    /**
+     * Retrieves the list of customer IDs associated with transactions.
+     * 
+     * @return List of customer IDs.
+     */
     public List<Integer> getCustomerID() {
         return customerID;
     }
 
+    /**
+     * Retrieves the list of countries where transactions took place.
+     * 
+     * @return List of countries.
+     */
     public List<String> getCountry() {
         return country;
     }
 
+    // Setter methods to modify the values of product attributes
+
+    /**
+     * Sets the list of invoice numbers.
+     * 
+     * @param invoiceNo List of invoice numbers to set.
+     */
     public void setInvoiceNo(List<String> invoiceNo) {
         this.invoiceNo = invoiceNo;
     }
 
+    /**
+     * Sets the stock code of the product.
+     * 
+     * @param stockCode Stock code to set.
+     */
     public void setStockCode(String stockCode) {
         this.stockCode = stockCode;
     }
 
+    /**
+     * Sets the product description.
+     * 
+     * @param description Description to set.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Sets the list of quantities for each transaction.
+     * 
+     * @param quantity List of product quantities to set.
+     */
     public void setQuantity(List<Integer> quantity) {
         this.quantity = quantity;
     }
 
+    /**
+     * Sets the list of invoice dates.
+     * 
+     * @param invoiceDate List of invoice dates to set.
+     */
     public void setInvoiceDate(List<LocalDateTime> invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
 
+    /**
+     * Sets the list of unit prices for each transaction.
+     * 
+     * @param unitPrice List of unit prices to set.
+     */
     public void setUnitPrice(List<Double> unitPrice) {
         this.unitPrice = unitPrice;
     }
 
+    /**
+     * Sets the list of customer IDs associated with transactions.
+     * 
+     * @param customerID List of customer IDs to set.
+     */
     public void setCustomerID(List<Integer> customerID) {
         this.customerID = customerID;
     }
 
+    /**
+     * Sets the list of countries where transactions took place.
+     * 
+     * @param country List of countries to set.
+     */
     public void setCountry(List<String> country) {
         this.country = country;
     }
 
     /**
-     * Overridden toString method to display product information in tabular format
+     * Retrieves all invoice details.
      * 
-     * @return Formatted string representation of Product
+     * @return An array containing invoiceNo, stockCode, description, quantity, invoiceDate, 
+     *         unitPrice, customerID, and country.
      */
     @Override
     public String toString() {
