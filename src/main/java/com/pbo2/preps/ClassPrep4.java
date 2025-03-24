@@ -1,21 +1,10 @@
 package com.pbo2.preps;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.NumberFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
-
+import java.io.*;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
+import java.text.*;
 /**
  * Represents a product with attributes such as invoice number, stock code,
  * description, quantity, invoice date, unit price, customer ID, and country.
@@ -53,7 +42,21 @@ class Product {
         this.customerID.add(customerID);
         this.country.add(country);
     }
-
+    /**
+     * Copy constructor for the Product class.
+     * Creates a new Product object by duplicating the attributes of an existing Product instance.
+     * Ensures that mutable list attributes are deep copied to prevent unintended modifications.
+     * 
+     * @param other The Product object to copy from.
+     *              - {@code invoiceNo}: List of invoice numbers.
+     *              - {@code stockCode}: Unique stock code of the product.
+     *              - {@code description}: Description of the product.
+     *              - {@code quantity}: List of quantities corresponding to each invoice.
+     *              - {@code invoiceDate}: List of invoice dates and times.
+     *              - {@code unitPrice}: List of unit prices for each invoice entry.
+     *              - {@code customerID}: List of customer IDs associated with the invoices.
+     *              - {@code country}: List of countries where the purchases were made.
+     */
     public Product(Product other) {
         this.invoiceNo = new ArrayList<>(other.invoiceNo);
         this.stockCode = other.stockCode;
@@ -66,8 +69,6 @@ class Product {
     }
 
     
-   // Getter methods to retrieve the values of product attributes
-
     /**
      * Retrieves the list of invoice numbers.
      * 
@@ -215,10 +216,10 @@ class Product {
     }
 
     /**
-     * Retrieves all invoice details.
+     * Overrides the toString method to generate a formatted string representation 
+     * of the product details in a tabular format.
      * 
-     * @return An array containing invoiceNo, stockCode, description, quantity, invoiceDate, 
-     *         unitPrice, customerID, and country.
+     * @return A string containing formatted product details.
      */
     @Override
     public String toString() {
