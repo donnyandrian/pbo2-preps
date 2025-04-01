@@ -265,11 +265,9 @@ class ProductController {
     /**
      * Loads product data from a CSV file.
      * 
-     * @param filename Name of the CSV file.
+     * @param urlText Name of the CSV file.
      */
-    public void LoadFromCSV(String filename) {
-        String urlText = "https://drive.google.com/uc?export=download&id=14DWF2kG0hGD3hYJjAcsexOCGedVfrv3r";
-
+    public void LoadFromCSV(String urlText) {
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(new URI(urlText).toURL().openStream()))) {
             String line;
@@ -298,7 +296,7 @@ class ProductController {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error reading online_retail.csv");
+            System.err.println("Error reading " + urlText);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -452,7 +450,7 @@ class ProductController {
 public class ClassPrep4 {
     public static void _main(String[] args) {
         ProductController controller = new ProductController();
-        controller.LoadFromCSV("/online_retail.csv");
+        controller.LoadFromCSV("https://drive.google.com/uc?export=download&id=14DWF2kG0hGD3hYJjAcsexOCGedVfrv3r");
         try (Scanner sc = new Scanner(System.in)) {
             Boolean first = true;
             do {
