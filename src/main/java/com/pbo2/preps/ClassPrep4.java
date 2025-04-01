@@ -1,10 +1,12 @@
 package com.pbo2.preps;
 
 import java.io.*;
+import java.net.*;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;
 import java.text.*;
+
 /**
  * Represents a product with attributes such as invoice number, stock code,
  * description, quantity, invoice date, unit price, customer ID, and country.
@@ -42,20 +44,26 @@ class Product {
         this.customerID.add(customerID);
         this.country.add(country);
     }
+
     /**
      * Copy constructor for the Product class.
-     * Creates a new Product object by duplicating the attributes of an existing Product instance.
-     * Ensures that mutable list attributes are deep copied to prevent unintended modifications.
+     * Creates a new Product object by duplicating the attributes of an existing
+     * Product instance.
+     * Ensures that mutable list attributes are deep copied to prevent unintended
+     * modifications.
      * 
      * @param other The Product object to copy from.
      *              - {@code invoiceNo}: List of invoice numbers.
      *              - {@code stockCode}: Unique stock code of the product.
      *              - {@code description}: Description of the product.
-     *              - {@code quantity}: List of quantities corresponding to each invoice.
+     *              - {@code quantity}: List of quantities corresponding to each
+     *              invoice.
      *              - {@code invoiceDate}: List of invoice dates and times.
      *              - {@code unitPrice}: List of unit prices for each invoice entry.
-     *              - {@code customerID}: List of customer IDs associated with the invoices.
-     *              - {@code country}: List of countries where the purchases were made.
+     *              - {@code customerID}: List of customer IDs associated with the
+     *              invoices.
+     *              - {@code country}: List of countries where the purchases were
+     *              made.
      */
     public Product(Product other) {
         this.invoiceNo = new ArrayList<>(other.invoiceNo);
@@ -68,7 +76,6 @@ class Product {
         this.country = new ArrayList<>(other.country);
     }
 
-    
     /**
      * Retrieves the list of invoice numbers.
      * 
@@ -216,7 +223,7 @@ class Product {
     }
 
     /**
-     * Overrides the toString method to generate a formatted string representation 
+     * Overrides the toString method to generate a formatted string representation
      * of the product details in a tabular format.
      * 
      * @return A string containing formatted product details.
@@ -258,11 +265,11 @@ class ProductController {
     /**
      * Loads product data from a CSV file.
      * 
-     * @param filename Name of the CSV file.
+     * @param urlText Name of the CSV file.
      */
-    public void LoadFromCSV(String filename) {
+    public void LoadFromCSV(String urlText) {
         try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(ClassPrep4.class.getResourceAsStream(filename)))) {
+                new InputStreamReader(new URI(urlText).toURL().openStream()))) {
             String line;
             br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
@@ -289,7 +296,9 @@ class ProductController {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error reading online_retail.csv");
+            System.err.println("Error reading " + urlText);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
     }
 
@@ -441,7 +450,7 @@ class ProductController {
 public class ClassPrep4 {
     public static void _main(String[] args) {
         ProductController controller = new ProductController();
-        controller.LoadFromCSV("/online_retail.csv");
+        controller.LoadFromCSV("https://drive.google.com/uc?export=download&id=14DWF2kG0hGD3hYJjAcsexOCGedVfrv3r");
         try (Scanner sc = new Scanner(System.in)) {
             Boolean first = true;
             do {
